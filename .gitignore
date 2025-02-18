@@ -1,0 +1,16 @@
+*.iml
+.gradle
+/local.properties
+/.idea/caches
+.DS_Store
+/build
+/captures
+*.apk
+*.aar
+*.ap_
+*.aab
+*.keystore
+*.jks
+firebase-debug.log
+fastlane/report.xml
+local.properties
