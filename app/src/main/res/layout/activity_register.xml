@@ -17,12 +17,16 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/textViewRegister"
+            android:id="@+id/textViewRegisterTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Inscription"
             android:textSize="20sp"
             android:textStyle="bold" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="40dp" />
 
         <EditText
             android:id="@+id/editTextRegisterLogin"
@@ -39,6 +43,17 @@
             android:ems="10"
             android:hint="Mot de passe"
             android:inputType="textPassword" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="20dp" />
+
+        <TextView
+            android:id="@+id/textViewRegisterError"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textColor="@color/purple_200" />
 
         <Button
             android:id="@+id/btnTryRegister"

@@ -3,6 +3,7 @@ package com.persello.domotics.ui.auth
 import android.os.Bundle
 import android.view.View
 import android.widget.EditText
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.persello.domotics.api.Api
 import com.persello.domotics.R
@@ -23,8 +24,16 @@ class RegisterActivity : AppCompatActivity() {
 
 
     fun register(view: View) {
+        val textViewError = findViewById<TextView>(R.id.textViewRegisterError);
         val login = findViewById<EditText>(R.id.editTextRegisterLogin).text.toString();
         val password = findViewById<EditText>(R.id.editTextRegisterPassword).text.toString();
+
+        if (login.isEmpty() || password.isEmpty()) {
+            textViewError.text = "Veuillez remplir tous les champs";
+            return;
+        }
+
+        textViewError.text = "";
 
         this.data = AuthData(login, password);
 
@@ -32,9 +41,16 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     fun registerSuccess(responseCode: Int) {
-        if (responseCode == 200)
-        {
+        val textViewError = findViewById<TextView>(R.id.textViewRegisterError);
+
+        if (responseCode == 200) {
             goToLogin(findViewById(R.id.editTextRegisterLogin));
+        } else if (responseCode == 400) {
+            textViewError.text = "Les données fournies sont incorrectes";
+        } else if (responseCode == 409) {
+            textViewError.text = "Le login est déjà utilisé par un autre compte";
+        } else if (responseCode == 500) {
+            textViewError.text = "Une erreur s’est produite au niveau du serveur";
         }
     }
 }
