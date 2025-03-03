@@ -31,7 +31,8 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="Identifiant"
-            android:inputType="text" />
+            android:inputType="text"
+            android:text="maxence" />
 
         <EditText
             android:id="@+id/editTextLoginPassword"
@@ -39,7 +40,8 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="Mot de passe"
-            android:inputType="textPassword" />
+            android:inputType="textPassword"
+            android:text="maxence" />
 
         <Button
             android:id="@+id/btnTryLogin"
