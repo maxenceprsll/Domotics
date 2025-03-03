@@ -9,17 +9,45 @@ import com.persello.domotics.api.Api
 import com.persello.domotics.MainActivity
 import com.persello.domotics.R
 import com.persello.domotics.data.auth.AuthData
+import com.persello.domotics.data.auth.TokenData
+import com.persello.domotics.storage.TokenStorage
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 
 class LoginActivity : AppCompatActivity() {
+
+    private lateinit var tokenStorage: TokenStorage;
+    private val mainScope = MainScope();
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        tokenStorage = TokenStorage(this);
+
+        mainScope.launch {
+            if(tokenStorage.read().isNotEmpty()) {
+                goToMainActivity()
+                finish()
+            }
+        }
+
     }
 
     fun goToRegister(view: View) {
         val intent = Intent(this, RegisterActivity::class.java);
         startActivity(intent);
+    }
+
+    private fun goToMainActivity() {
+        val intent = Intent(this, MainActivity::class.java);
+        startActivity(intent);
+        finish();
+    }
+
+    private suspend fun saveToken(tokenData: TokenData) {
+        val token = tokenData.token;
+        tokenStorage.write(token);
     }
 
     fun login(view: View) {
@@ -28,16 +56,15 @@ class LoginActivity : AppCompatActivity() {
 
         val data = AuthData(mail, password);
 
-        Api().post<AuthData, String>("https://polyhome.lesmoulinsdudev.com/api/users/auth", data, ::loginSuccess);
+        Api().post<AuthData, TokenData>("https://polyhome.lesmoulinsdudev.com/api/users/auth", data, ::loginSuccess);
     }
 
-    fun loginSuccess(responseCode: Int, token: String?) {
-        if (responseCode == 200)
-        {
-            val intent = Intent(this, MainActivity::class.java);
-            intent.putExtra("token", token);
-            startActivity(intent);
-            finish();
+    fun loginSuccess(responseCode: Int, token: TokenData?) {
+        if (responseCode == 200 && token != null) {
+            mainScope.launch {
+                saveToken(token);
+                goToMainActivity();
+            }
         }
     }
 }
