@@ -25,6 +25,10 @@
             android:textSize="20sp"
             android:textStyle="bold" />
 
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="40dp" />
+
         <EditText
             android:id="@+id/editTextLoginLogin"
             android:layout_width="match_parent"
@@ -42,6 +46,15 @@
             android:hint="Mot de passe"
             android:inputType="textPassword"
             android:text="maxence" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="20dp" />
+
+        <TextView
+            android:id="@+id/textViewLoginError"
+            android:layout_width="match_parent"
+            android:layout_height="20dp" />
 
         <Button
             android:id="@+id/btnTryLogin"
