@@ -21,4 +21,8 @@ class TokenStorage(private val context: Context) {
     suspend fun read(): String {
         return context.tokenStore.data.firstOrNull()?.get(tokenKey) ?: ""
     }
+
+    suspend fun clearToken() {
+        write("");
+    }
 }

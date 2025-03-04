@@ -29,8 +29,11 @@ class MainActivity : AppCompatActivity() {
         val navView: BottomNavigationView = binding.navView;
 
         val navController = findNavController(R.id.nav_host_fragment_activity_main);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            checkTokenValidity();
+        }
+
         val appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.navigation_favorites, R.id.navigation_devices, R.id.navigation_settings
@@ -41,6 +44,20 @@ class MainActivity : AppCompatActivity() {
 
         tokenStorage = TokenStorage(this);
 
+        checkTokenValidity();
+    }
+
+    override fun onResume() {
+        super.onResume();
+        checkTokenValidity();
+    }
+
+    private fun goToLogin() {
+        val intent = Intent(this, LoginActivity::class.java);
+        startActivity(intent);
+    }
+
+    private fun checkTokenValidity() {
         mainScope.launch {
             if(tokenStorage.read().isEmpty()) {
                 goToLogin();
@@ -48,8 +65,4 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun goToLogin() {
-        val intent = Intent(this, LoginActivity::class.java);
-        startActivity(intent);
-    }
 }
