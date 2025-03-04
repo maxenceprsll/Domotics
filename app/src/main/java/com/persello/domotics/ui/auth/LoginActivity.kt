@@ -11,7 +11,7 @@ import com.persello.domotics.MainActivity
 import com.persello.domotics.R
 import com.persello.domotics.data.auth.AuthData
 import com.persello.domotics.data.auth.TokenData
-import com.persello.domotics.storage.TokenStorage
+import com.persello.domotics.storage.auth.TokenStorage
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
@@ -25,14 +25,6 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login);
 
         tokenStorage = TokenStorage(this);
-
-        mainScope.launch {
-            if(tokenStorage.read().isNotEmpty()) {
-                goToMainActivity()
-                finish()
-            }
-        }
-
     }
 
     fun goToRegister(view: View) {
@@ -41,8 +33,6 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun goToMainActivity() {
-        val intent = Intent(this, MainActivity::class.java);
-        startActivity(intent);
         finish();
     }
 

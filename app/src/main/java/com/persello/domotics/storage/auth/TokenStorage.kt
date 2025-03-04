@@ -1,4 +1,4 @@
-package com.persello.domotics.storage
+package com.persello.domotics.storage.auth
 
 import android.content.Context
 import androidx.datastore.preferences.core.edit
@@ -6,7 +6,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.firstOrNull
 
-private val Context.tokenStore by preferencesDataStore(name = "token");
+private val Context.tokenStore by preferencesDataStore(name = "domotics");
 
 class TokenStorage(private val context: Context) {
 
