@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.persello.domotics.databinding.FragmentSettingsBinding
 import com.persello.domotics.storage.auth.TokenStorage
+import com.persello.domotics.storage.home.HomeStorage
 import com.persello.domotics.ui.auth.LoginActivity
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -19,6 +20,7 @@ class SettingsFragment : Fragment() {
     private var _binding: FragmentSettingsBinding? = null;
     private val binding get() = _binding!!;
     private lateinit var tokenStorage: TokenStorage;
+    private lateinit var homeStorage: HomeStorage;
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,6 +38,7 @@ class SettingsFragment : Fragment() {
         }
 
         tokenStorage = TokenStorage(requireContext());
+        homeStorage = HomeStorage(requireContext());
 
         binding.btnSettingsLogout.setOnClickListener {
             logoutUser()
@@ -52,6 +55,7 @@ class SettingsFragment : Fragment() {
     private fun logoutUser() {
         MainScope().launch {
             tokenStorage.clearToken();
+            homeStorage.clear();
 
             requireActivity().run {
                 startActivity(Intent(this, LoginActivity::class.java))

@@ -56,7 +56,6 @@ class FavoritesFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState);
         setupSpinner();
         observeViewModel();
-        loadHomes();
     }
 
     private fun observeViewModel() {
@@ -108,12 +107,6 @@ class FavoritesFragment : Fragment() {
         }
     }
 
-    private fun loadHomes() {
-        MainScope().launch {
-            _homes.value = homeStorage.read();
-        }
-    }
-
     private fun fetchHomes() {
         MainScope().launch {
             val token = tokenStorage.read();
@@ -125,6 +118,7 @@ class FavoritesFragment : Fragment() {
         if (responseCode == 200 && homes != null) {
             MainScope().launch {
                 homeStorage.write(homes);
+                _homes.value = homeStorage.read();
             }
         } else if (responseCode == 403 || responseCode == 500) {
             MainScope().launch {

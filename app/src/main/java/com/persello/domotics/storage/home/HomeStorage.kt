@@ -33,6 +33,10 @@ class HomeStorage(private val context: Context) {
         }
     }
 
+    suspend fun clear() {
+        write(ArrayList())
+    }
+
     suspend fun readSelectedHouseId(): String {
         return context.dataStore.data.firstOrNull()?.get(selectedHouseIdKey) ?: ""
     }
