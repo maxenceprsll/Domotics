@@ -22,9 +22,8 @@ class DeviceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
                 return R.drawable.window_shutter_open;
             } else if (opening > 0 && opening < 1) {
                 return R.drawable.window_shutter_alert;
-                //TODO: trouver icon volet en mouvement
             } else {
-                return R.drawable.window_shutter_alert;
+                return R.drawable.alert_circle_outline;
             }
         } else if (type == "garage door") {
             if (opening == 0) {
@@ -33,9 +32,8 @@ class DeviceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
                 return R.drawable.garage_open;
             } else if (opening > 0 && opening < 1) {
                 return R.drawable.garage_alert;
-                //TODO: trouver icon garage en mouvement
             } else {
-                return R.drawable.garage_alert;
+                return R.drawable.alert_circle_outline;
             }
         } else if (type == "light") {
             if (power == 0) {
