@@ -1,22 +1,18 @@
 package com.persello.domotics.ui.devices
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
-import com.persello.domotics.R
 import com.persello.domotics.api.Api
 import com.persello.domotics.data.device.DeviceData
 import com.persello.domotics.data.device.DevicesData
-import com.persello.domotics.data.home.HomeData
 import com.persello.domotics.databinding.FragmentDevicesBinding
 import com.persello.domotics.storage.auth.TokenStorage
 import com.persello.domotics.storage.device.DeviceStorage
@@ -88,15 +84,12 @@ class DevicesFragment : Fragment() {
         MainScope().launch {
             val token = tokenStorage.read();
             val houseId = homeStorage.readSelectedHouseId();
-            Log.d("","Fetching devices for house $houseId");
             val path = "https://polyhome.lesmoulinsdudev.com/api/houses/$houseId/devices";
             Api().get<DevicesData>(path, ::onDevicesReceived, securityToken = token);
         };
     }
 
     private fun onDevicesReceived(responseCode: Int, devices: DevicesData?) {
-        Log.d("","Devices received: $devices");
-        Log.d("","Response code: $responseCode");
         if (responseCode == 200 && devices != null) {
             MainScope().launch {
                 deviceStorage.write(devices.devices);
