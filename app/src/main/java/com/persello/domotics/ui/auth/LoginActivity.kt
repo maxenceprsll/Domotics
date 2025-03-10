@@ -7,7 +7,6 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.persello.domotics.api.Api
-import com.persello.domotics.MainActivity
 import com.persello.domotics.R
 import com.persello.domotics.data.auth.AuthData
 import com.persello.domotics.data.auth.TokenData
