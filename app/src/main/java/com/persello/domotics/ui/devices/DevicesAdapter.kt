@@ -2,6 +2,7 @@ package com.persello.domotics.ui.devices
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.persello.domotics.R
 import com.persello.domotics.data.device.DeviceData
@@ -29,7 +30,9 @@ class DevicesAdapter : RecyclerView.Adapter<DeviceViewHolder>()
     }
 
     fun setDevices(devices: List<DeviceData>) {
+        val diffCallback = DeviceDiffCallback(this.devices, devices);
+        val diffResult = DiffUtil.calculateDiff(diffCallback);
         this.devices = devices;
-        notifyItemRangeChanged(0, devices.size);
+        diffResult.dispatchUpdatesTo(this);
     }
 }

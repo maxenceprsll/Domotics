@@ -13,7 +13,6 @@ class DeviceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private fun getDeviceImageResource(device: DeviceData): Int {
         val type = device.type;
         val opening = device.opening;
-        val openingMode = device.openingMode;
         val power = device.power;
 
         if (type == "sliding shutter" || type == "rolling shutter") {

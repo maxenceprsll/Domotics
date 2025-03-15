@@ -1,6 +1,8 @@
 package com.persello.domotics.ui.devices
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +20,7 @@ import com.persello.domotics.storage.auth.TokenStorage
 import com.persello.domotics.storage.device.DeviceStorage
 import com.persello.domotics.storage.home.HomeStorage
 import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.Runnable
 import kotlinx.coroutines.launch
 
 class DevicesFragment : Fragment() {
@@ -31,6 +34,14 @@ class DevicesFragment : Fragment() {
 
     private val _devices = MutableLiveData<ArrayList<DeviceData>>();
     private val devices: LiveData<ArrayList<DeviceData>> = _devices;
+
+    private val handler = Handler(Looper.getMainLooper());
+    private val fetchDeviceRunnable = object : Runnable {
+        override fun run() {
+            fetchDevices();
+            handler.postDelayed(this, 100);
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -60,6 +71,7 @@ class DevicesFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState);
         setupRecyclerView();
         observeViewModel();
+        handler.post(fetchDeviceRunnable);
     }
 
     private fun observeViewModel() {
@@ -77,7 +89,6 @@ class DevicesFragment : Fragment() {
 
     private fun updateRecyclerView(devices: List<DeviceData>) {
         adapter.setDevices(devices);
-        binding.recyclerViewDevices.adapter = adapter;
     }
 
     private fun fetchDevices() {
@@ -105,7 +116,8 @@ class DevicesFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+        super.onDestroyView();
+        handler.removeCallbacks(fetchDeviceRunnable);
+        _binding = null;
     }
 }
