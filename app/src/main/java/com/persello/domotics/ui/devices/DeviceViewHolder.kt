@@ -16,9 +16,9 @@ class DeviceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val power = device.power;
 
         if (type == "sliding shutter" || type == "rolling shutter") {
-            if (opening == 0) {
+            if (opening == 0.0) {
                 return R.drawable.window_shutter;
-            } else if (opening == 1) {
+            } else if (opening == 1.0) {
                 return R.drawable.window_shutter_open;
             } else if (opening > 0 && opening < 1) {
                 return R.drawable.window_shutter_alert;
@@ -26,10 +26,10 @@ class DeviceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
                 return R.drawable.alert_circle_outline;
             }
         } else if (type == "garage door") {
-            if (opening == 0) {
-                return R.drawable.garage;
-            } else if (opening == 1) {
+            if (opening == 1.0) {
                 return R.drawable.garage_open;
+            } else if (opening == 0.0) {
+                return R.drawable.garage;
             } else if (opening > 0 && opening < 1) {
                 return R.drawable.garage_alert;
             } else {
@@ -37,16 +37,16 @@ class DeviceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             }
         } else if (type == "light") {
             if (power == 0) {
-                return R.drawable.lightbulb;
+                return R.drawable.lightbulb_outline;
             } else if (power == 1){
                 return R.drawable.lightbulb_on;
             } else {
                 return R.drawable.lightbulb_alert;
             }
         } else {
-            if (opening == 0 || power == 0) {
+            if (opening == 0.0 || power == 0) {
                 return R.drawable.power_plug_off;
-            } else if (opening == 1 || power == 1) {
+            } else if (opening == 1.0 || power == 1) {
                 return R.drawable.power_plug;
             } else {
                 return R.drawable.alert_circle_outline;
@@ -57,13 +57,14 @@ class DeviceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     fun bind(device: DeviceData) {
         itemView.findViewById<TextView>(R.id.textViewDeviceId).text = device.id;
 
-
         val progressBarView = itemView.findViewById<ProgressBar>(R.id.progressBarDevice);
 
-        if (device.type === "light") {
-            progressBarView.progress = device.power;
+        if (device.type == "light") {
+            progressBarView.progress = device.power * 100;
+        } else if (device.type == "sliding shutter" || device.type == "rolling shutter") {
+            progressBarView.progress = 100 - (device.opening * 100).toInt();
         } else {
-            progressBarView.progress = device.opening;
+            progressBarView.progress = 100 - (device.opening * 100).toInt();
         }
 
         itemView.findViewById<ImageView>(R.id.imageViewDevice).setImageResource(getDeviceImageResource(device));
