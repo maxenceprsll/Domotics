@@ -13,12 +13,15 @@ class DevicesAdapter : RecyclerView.Adapter<DeviceViewHolder>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DeviceViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.devices_list_item, parent, false);
-        return DeviceViewHolder(view)
+            .inflate(R.layout.devices_list_item, parent, false).apply{
+                tag = devices[viewType];
+            };
+        return DeviceViewHolder(view);
     }
 
     override fun onBindViewHolder(holder: DeviceViewHolder, position: Int) {
-        holder.bind(devices[position])
+        holder.bind(devices[position]);
+        holder.itemView.tag = devices[position];
     }
 
     override fun getItemCount(): Int {
