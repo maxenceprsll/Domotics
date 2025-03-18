@@ -120,4 +120,9 @@ class DevicesFragment : Fragment() {
         handler.removeCallbacks(fetchDeviceRunnable);
         _binding = null;
     }
+
+    override fun onResume() {
+        super.onResume();
+        fetchDevices();
+    }
 }

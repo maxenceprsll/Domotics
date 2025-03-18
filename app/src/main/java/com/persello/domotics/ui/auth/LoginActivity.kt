@@ -35,11 +35,6 @@ class LoginActivity : AppCompatActivity() {
         finish();
     }
 
-    private suspend fun saveToken(tokenData: TokenData) {
-        val token = tokenData.token;
-        tokenStorage.write(token);
-    }
-
     fun login(view: View) {
         val mail = findViewById<EditText>(R.id.editTextLoginLogin).text.toString();
         val password = findViewById<EditText>(R.id.editTextLoginPassword).text.toString();
@@ -54,7 +49,7 @@ class LoginActivity : AppCompatActivity() {
 
         if (responseCode == 200 && token != null) {
             mainScope.launch {
-                saveToken(token);
+                tokenStorage.write(token.token);
                 goToMainActivity();
             }
         } else if (responseCode == 400) {
