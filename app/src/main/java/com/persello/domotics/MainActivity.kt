@@ -12,11 +12,14 @@ import androidx.navigation.ui.setupWithNavController
 import com.persello.domotics.api.Api
 import com.persello.domotics.data.device.CommandData
 import com.persello.domotics.data.device.DeviceData
+import com.persello.domotics.data.user.UserData
+import com.persello.domotics.data.user.UserLoginData
 import com.persello.domotics.databinding.ActivityMainBinding
 import com.persello.domotics.storage.DataStoreSingleton.dataStore
 import com.persello.domotics.storage.auth.TokenStorage
 import com.persello.domotics.storage.device.DeviceStorage
 import com.persello.domotics.storage.home.HomeStorage
+import com.persello.domotics.storage.user.UserStorage
 import com.persello.domotics.ui.auth.LoginActivity
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -130,5 +133,4 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
 }

@@ -35,7 +35,10 @@ class SettingsAdapter (context: Context, private val dataSource: List<UserData>,
 
         rowView.findViewById<ImageView>(R.id.imageViewUsersIcon).setImageResource(if (getItem(position).owner == 1) R.drawable.account_key_outline else R.drawable.account_outline)
 
-        rowView.findViewById<Button>(R.id.button).visibility = if (getItem(position).owner == 1 || !isOwner) View.GONE else View.VISIBLE;
+        val button = rowView.findViewById<Button>(R.id.btnUsersRemoveUser);
+
+        button.visibility = if (getItem(position).owner == 1 || !isOwner) View.GONE else View.VISIBLE;
+        button.tag = getItem(position);
 
         return rowView
     }
