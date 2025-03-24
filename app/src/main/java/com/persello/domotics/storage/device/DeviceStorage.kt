@@ -11,21 +11,21 @@ import java.util.ArrayList
 
 class DeviceStorage(private val context: Context) {
 
-    private var deviceDataKey = stringPreferencesKey("device_data")
+    private var deviceDataKey = stringPreferencesKey("device_data");
 
     suspend fun write(deviceDataList: ArrayList<DeviceData>) {
-        val json = Gson().toJson(deviceDataList)
+        val json = Gson().toJson(deviceDataList);
         context.dataStore.edit { preferences ->
-            preferences[deviceDataKey] = json
-        }
+            preferences[deviceDataKey] = json;
+        };
     }
 
     suspend fun read(): ArrayList<DeviceData> {
-        val json = context.dataStore.data.firstOrNull()?.get(deviceDataKey) ?: return ArrayList()
-        return Gson().fromJson(json, Array<DeviceData>::class.java).toCollection(ArrayList())
+        val json = context.dataStore.data.firstOrNull()?.get(deviceDataKey) ?: return ArrayList();
+        return Gson().fromJson(json, Array<DeviceData>::class.java).toCollection(ArrayList());
     }
 
     suspend fun clear() {
-        write(ArrayList())
+        write(ArrayList());
     }
 }
