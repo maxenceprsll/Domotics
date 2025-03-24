@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.persello.domotics.R
 import com.persello.domotics.api.Api
+import com.persello.domotics.data.home.HomeData
 import com.persello.domotics.data.user.UserData
 import com.persello.domotics.databinding.FragmentSettingsBinding
 import com.persello.domotics.storage.auth.TokenStorage
@@ -32,6 +33,8 @@ class SettingsFragment : Fragment() {
     private lateinit var homeStorage: HomeStorage;
     private lateinit var deviceStorage: DeviceStorage;
     private lateinit var userStorage: UserStorage;
+
+    private var currentHome: HomeData? = null;
 
     private val _users = MutableLiveData<List<UserData>>();
     val users: LiveData<List<UserData>> = _users;
@@ -60,6 +63,10 @@ class SettingsFragment : Fragment() {
             logoutUser()
         }
 
+        MainScope().launch {
+            currentHome = homeStorage.read(homeStorage.readSelectedHouseId());
+        }
+
         fetchUsers();
 
         return root
@@ -82,7 +89,10 @@ class SettingsFragment : Fragment() {
     }
 
     private fun updateList(users: List<UserData>) {
-        val adapter = SettingsAdapter(requireContext(), users);
+        if (currentHome == null) {
+            return;
+        }
+        val adapter = SettingsAdapter(requireContext(), users, currentHome!!.owner);
         binding.listViewSettingsUsers.adapter = adapter;
         adapter.notifyDataSetChanged();
     }

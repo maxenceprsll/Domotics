@@ -5,12 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import com.persello.domotics.R
 import com.persello.domotics.data.user.UserData
 
-class SettingsAdapter (context: Context, private val dataSource: List<UserData>) : BaseAdapter(){
+class SettingsAdapter (context: Context, private val dataSource: List<UserData>, private val isOwner: Boolean) : BaseAdapter(){
     private val inflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
     override fun getCount(): Int {
@@ -33,6 +34,8 @@ class SettingsAdapter (context: Context, private val dataSource: List<UserData>)
         rowView.findViewById<TextView>(R.id.textViewUsersLogin).text = loginText;
 
         rowView.findViewById<ImageView>(R.id.imageViewUsersIcon).setImageResource(if (getItem(position).owner == 1) R.drawable.account_key_outline else R.drawable.account_outline)
+
+        rowView.findViewById<Button>(R.id.button).visibility = if (getItem(position).owner == 1 || !isOwner) View.GONE else View.VISIBLE;
 
         return rowView
     }

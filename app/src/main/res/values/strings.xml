@@ -6,4 +6,5 @@
     <string name="button_connect">Se connecter</string>
     <string name="button_register">S\'inscrire</string>
     <string name="button_logout">Se déconnecter</string>
+    <string name="button_remove_user">Expulser</string>
 </resources>

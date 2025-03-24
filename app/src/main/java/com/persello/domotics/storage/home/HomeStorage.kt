@@ -26,6 +26,11 @@ class HomeStorage(private val context: Context) {
         return Gson().fromJson(json, Array<HomeData>::class.java).toCollection(ArrayList());
     }
 
+    suspend fun read(houseId: String): HomeData? {
+        val homeDataList = read();
+        return homeDataList.find { it.houseId == houseId };
+    }
+
     suspend fun saveSelectedHouseId(selectedHouseId: String) {
         context.dataStore.edit { preferences ->
             preferences[selectedHouseIdKey] = selectedHouseId;
