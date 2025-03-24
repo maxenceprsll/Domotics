@@ -39,7 +39,7 @@ class DevicesFragment : Fragment() {
     private val fetchDeviceRunnable = object : Runnable {
         override fun run() {
             fetchDevices();
-            handler.postDelayed(this, 100);
+            handler.postDelayed(this, 500);
         }
     }
 
@@ -61,6 +61,18 @@ class DevicesFragment : Fragment() {
         tokenStorage = TokenStorage(requireContext());
         homeStorage = HomeStorage(requireContext());
         deviceStorage = DeviceStorage(requireContext());
+
+        MainScope().launch {
+            val houseId = homeStorage.readSelectedHouseId();
+            val devices = deviceStorage.read();
+            val devicesHouseId = deviceStorage.readHouseId();
+            if (devicesHouseId != houseId) {
+                deviceStorage.clear();
+            } else {
+                _devices.value = devices;
+            }
+            fetchDevices();
+        };
 
         fetchDevices();
 
@@ -103,7 +115,7 @@ class DevicesFragment : Fragment() {
     private fun onDevicesReceived(responseCode: Int, devices: DevicesData?) {
         if (responseCode == 200 && devices != null) {
             MainScope().launch {
-                deviceStorage.write(devices.devices);
+                deviceStorage.write(devices.devices, homeStorage.readSelectedHouseId());
                 _devices.value = deviceStorage.read();
             }
         } else if (responseCode == 400 || responseCode == 500) {

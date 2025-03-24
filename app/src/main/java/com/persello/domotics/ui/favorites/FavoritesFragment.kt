@@ -15,6 +15,7 @@ import com.persello.domotics.api.Api
 import com.persello.domotics.data.home.HomeData
 import com.persello.domotics.databinding.FragmentFavoritesBinding
 import com.persello.domotics.storage.auth.TokenStorage
+import com.persello.domotics.storage.device.DeviceStorage
 import com.persello.domotics.storage.home.HomeStorage
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -25,6 +26,7 @@ class FavoritesFragment : Fragment() {
     private val binding get() = _binding!!;
     private lateinit var tokenStorage: TokenStorage;
     private lateinit var homeStorage: HomeStorage;
+    private lateinit var deviceStorage: DeviceStorage;
 
     private val _homes = MutableLiveData<List<HomeData>>();
     val homes: LiveData<List<HomeData>> = _homes;
@@ -46,6 +48,11 @@ class FavoritesFragment : Fragment() {
 
         tokenStorage = TokenStorage(requireContext());
         homeStorage = HomeStorage(requireContext());
+        deviceStorage = DeviceStorage(requireContext());
+
+        MainScope().launch {
+            _homes.value = homeStorage.read();
+        }
 
         fetchHomes();
 
@@ -61,6 +68,7 @@ class FavoritesFragment : Fragment() {
     private fun observeViewModel() {
         homes.observe(viewLifecycleOwner) { homes ->
             updateSpinner(homes);
+            selectSavedHome(homes);
         };
     }
 
@@ -103,7 +111,18 @@ class FavoritesFragment : Fragment() {
 
     private fun saveSelectedHouse(house: HomeData) {
         MainScope().launch {
-            homeStorage.saveSelectedHouseId(house.houseId.toString())
+            homeStorage.saveSelectedHouseId(house.houseId);
+        };
+    }
+
+    private fun selectSavedHome(homes: List<HomeData>) {
+        MainScope().launch {
+            val selectedHouseId = homeStorage.readSelectedHouseId();
+            val selectedHouse = homes.find { it.houseId == selectedHouseId };
+            if (selectedHouse != null) {
+                val position = homes.indexOf(selectedHouse);
+                binding.spinnerFavoritesHomes.setSelection(position);
+            }
         }
     }
 
