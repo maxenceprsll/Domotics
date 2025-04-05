@@ -7,14 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Button
-import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
-import androidx.navigation.findNavController
+import com.persello.domotics.MainActivity
 import com.persello.domotics.R
 import com.persello.domotics.api.Api
 import com.persello.domotics.data.home.HomeData
@@ -25,7 +23,6 @@ import com.persello.domotics.storage.auth.TokenStorage
 import com.persello.domotics.storage.device.DeviceStorage
 import com.persello.domotics.storage.home.HomeStorage
 import com.persello.domotics.storage.user.UserStorage
-import com.persello.domotics.ui.auth.LoginActivity
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
@@ -65,6 +62,8 @@ class SettingsFragment : Fragment() {
 
         binding.btnSettingsLogout.setOnClickListener {
             logoutUser();
+            val intent = Intent(requireContext(), MainActivity::class.java);
+            startActivity(intent);
         };
 
         binding.btnSettingsAddUser.setOnClickListener {
@@ -128,6 +127,12 @@ class SettingsFragment : Fragment() {
         }
     }
 
+    private fun logoutUser() {
+        MainScope().launch {
+            tokenStorage.clearToken();
+        }
+    }
+
     private fun fetchUsers() {
         MainScope().launch {
             val token = tokenStorage.read();
@@ -143,10 +148,10 @@ class SettingsFragment : Fragment() {
                 userStorage.write(users)
                 _users.value = userStorage.read();
             }
-        } else if (responseCode == 403 || responseCode == 500) {
-            MainScope().launch {
-                tokenStorage.clearToken();
-            }
+        } else if (responseCode == 500) {
+            // Please try again
+        } else if (responseCode == 403) {
+            logoutUser();
         }
     }
 
@@ -155,24 +160,10 @@ class SettingsFragment : Fragment() {
         _binding = null
     }
 
-    private fun logoutUser() {
-        MainScope().launch {
-            tokenStorage.clearToken();
-            homeStorage.clear();
-            deviceStorage.clear();
-            userStorage.clear();
-
-            requireActivity().run {
-                startActivity(Intent(this, LoginActivity::class.java))
-            }
-        }
-    }
-
     private fun addUser(userLoginData: UserLoginData) {
         MainScope().launch {
             val token = tokenStorage.read();
             val houseId = homeStorage.readSelectedHouseId();
-            System.out.println(userLoginData.userLogin);
             Api().post<UserLoginData>("https://polyhome.lesmoulinsdudev.com/api/houses/$houseId/users", userLoginData, ::onUserAdded, securityToken = token);
         }
     }
@@ -193,9 +184,7 @@ class SettingsFragment : Fragment() {
                 System.out.println("User already exists");
             }
             403 -> {
-                MainScope().launch {
-                    tokenStorage.clearToken();
-                }
+                logoutUser();
             }
         }
     }
@@ -222,9 +211,7 @@ class SettingsFragment : Fragment() {
                 // Please try again
             }
             403 -> {
-                MainScope().launch {
-                    tokenStorage.clearToken();
-                }
+                logoutUser();
             }
         }
     }

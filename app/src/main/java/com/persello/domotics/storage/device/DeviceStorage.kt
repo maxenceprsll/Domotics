@@ -12,11 +12,13 @@ import java.util.ArrayList
 class DeviceStorage(private val context: Context) {
 
     private var deviceDataKey = stringPreferencesKey("device_data");
+    private var devicesHouseId = stringPreferencesKey("devices_house_id");
 
-    suspend fun write(deviceDataList: ArrayList<DeviceData>) {
+    suspend fun write(deviceDataList: ArrayList<DeviceData>, houseId: String) {
         val json = Gson().toJson(deviceDataList);
         context.dataStore.edit { preferences ->
             preferences[deviceDataKey] = json;
+            preferences[devicesHouseId] = houseId;
         };
     }
 
@@ -25,7 +27,11 @@ class DeviceStorage(private val context: Context) {
         return Gson().fromJson(json, Array<DeviceData>::class.java).toCollection(ArrayList());
     }
 
+    suspend fun readHouseId(): String {
+        return context.dataStore.data.firstOrNull()?.get(devicesHouseId) ?: "";
+    }
+
     suspend fun clear() {
-        write(ArrayList());
+        write(ArrayList(), "");
     }
 }
