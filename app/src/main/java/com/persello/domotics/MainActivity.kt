@@ -1,10 +1,10 @@
 package com.persello.domotics
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
@@ -16,7 +16,6 @@ import com.persello.domotics.databinding.ActivityMainBinding
 import com.persello.domotics.storage.auth.TokenStorage
 import com.persello.domotics.storage.device.DeviceStorage
 import com.persello.domotics.storage.home.HomeStorage
-import com.persello.domotics.ui.auth.LoginActivity
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
@@ -27,6 +26,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var homeStorage: HomeStorage;
     private lateinit var deviceStorage: DeviceStorage;
     private val mainScope = MainScope();
+    private lateinit var navController: NavController;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
@@ -36,15 +36,20 @@ class MainActivity : AppCompatActivity() {
 
         val navView: BottomNavigationView = binding.navView;
 
-        val navController = findNavController(R.id.nav_host_fragment_activity_main);
+        navController = findNavController(R.id.nav_host_fragment_activity_main);
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            checkTokenValidity();
+            if (destination.id == R.id.navigation_login || destination.id == R.id.navigation_register) {
+                navView.visibility = View.GONE;
+            } else {
+                navView.visibility = View.VISIBLE;
+                checkTokenValidity();
+            }
         }
 
         val appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.navigation_favorites, R.id.navigation_devices, R.id.navigation_settings
+                R.id.navigation_favorites, R.id.navigation_devices, R.id.navigation_settings, R.id.navigation_login, R.id.navigation_register
             )
         );
         setupActionBarWithNavController(navController, appBarConfiguration);
@@ -63,8 +68,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun goToLogin() {
-        val intent = Intent(this, LoginActivity::class.java);
-        startActivity(intent);
+        navController.navigate(R.id.navigation_login);
     }
 
     private fun checkTokenValidity() {
