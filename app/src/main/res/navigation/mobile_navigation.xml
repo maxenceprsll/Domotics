@@ -18,8 +18,16 @@
         tools:layout="@layout/fragment_devices" />
 
     <fragment
+        android:id="@+id/navigation_login"
+        android:name="com.persello.domotics.ui.auth.LoginFragment"
+        android:label="@string/title_login" />
+    <fragment
         android:id="@+id/navigation_settings"
         android:name="com.persello.domotics.ui.settings.SettingsFragment"
         android:label="@string/title_settings"
         tools:layout="@layout/fragment_settings" />
+    <fragment
+        android:id="@+id/navigation_register"
+        android:name="com.persello.domotics.ui.auth.RegisterFragment"
+        android:label="@string/title_register" />
 </navigation>
